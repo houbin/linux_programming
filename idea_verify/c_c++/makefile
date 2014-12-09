@@ -6,11 +6,11 @@
 # Customising
 # 
 # Adjust the following if necessary 
-EXECUTABLE := main
+EXECUTABLE := storage
 LIBDIR := ./lib
-LIBS := gtest pthread
-INCLUDES := ./include
-SRC_DIR :=
+LIBS := pthread
+INCLUDES := ./util
+SRC_DIR := ./util
 
 
 
@@ -23,9 +23,8 @@ CPPFLAGS += -MMD
 
 RM-F := rm -f
 
-
 # # You should't need to change anything below this points
-SRCS := $(wildcard *.cc) $(wildcard $(addsuffix /*.cc, $(SRCDIR)))
+SRCS := $(wildcard *.cc) $(wildcard $(addsuffix /*.cc, $(SRC_DIR)))
 OBJS := $(patsubst %.cc, %.o, $(SRCS))
 DEPS := $(patsubst %.o, %.d, $(OBJS))
 MISSING_DEPS := $(filter-out $(wildcard $(DEPS)), $(DEPS))

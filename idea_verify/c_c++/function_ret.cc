@@ -5,36 +5,57 @@ using namespace std;
 
 class Status
 {
+private:
 public:
-    Status();
-    Status(const Status& s);
-    Status& operator=(const Status& arg);
+	int a;
+	int b;
+
+	Status()
+	{
+	    cout << "call status" << endl;
+		a = 1;
+		b = 2;
+	}
+
+	Status(int aa, int bb)
+	{
+		cout << "call status aa" << endl;
+		a = aa;
+		b = bb;
+	}
+
+	Status(const Status& s)
+	{
+	    cout << "call copy constructor" << endl;
+		a = s.a;
+		b = s.b;
+	}
+
+	Status& operator=(const Status& arg)
+	{
+	    cout << "call operator=" << endl;
+		a = arg.a;
+		b = arg.b;
+
+		return *this;
+	}
+	
 };
 
-Status::Status()
-{
-    cout << "call status" << endl;
-}
-
-Status::Status(const Status& s)
-{
-    cout << "call copy constructor" << endl;
-}
-
-Status& Status::operator=(const Status& arg)
-{
-    cout << "call operator=" << endl;
-}
 
 Status test()
 {
-    Status* s = new Status();
-
-    return *s;
+	Status s;
+	s.a = 99;
+	s.b = 100;
+    return s;
 }
 
 int main()
 {
-    Status b = test();
+    Status b;
+	b = test();
+
+	cout << "b.a is " << b.a << ", b.b is " << b.b << endl;
     return 0;
 }

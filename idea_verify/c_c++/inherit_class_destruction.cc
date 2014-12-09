@@ -28,6 +28,7 @@ public:
     }
 };
 
+
 int main()
 {
     Inherit i;
