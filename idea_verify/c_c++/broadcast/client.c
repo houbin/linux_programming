@@ -8,8 +8,8 @@
 #include <arpa/inet.h>
 
 #define MAXLINE 4096
-#define SEND_PORT 12345
-#define LISTEN_PORT 8888
+#define SEND_PORT 8888
+#define LISTEN_PORT 12345
 
 int udp_send(int sockfd, struct sockaddr_in *send_addr, int len)
 {
@@ -17,7 +17,7 @@ int udp_send(int sockfd, struct sockaddr_in *send_addr, int len)
     int count = 0;
     char buffer[1024] ;
 
-    while(1)
+    while(count < 100)
     {
         memset(buffer, 0, 1024);
         snprintf(buffer, 1024, "%d", count);
@@ -34,7 +34,7 @@ int udp_send(int sockfd, struct sockaddr_in *send_addr, int len)
         memset(buffer, 0, 1024);
         struct sockaddr_in recv_addr;
         int length = sizeof(recv_addr);
-        ret = recvfrom(sockfd, buffer, 1024, 0, (struct sockaddr *)&recv_addr, (socklen_t *)&recv_addr);
+        ret = recvfrom(sockfd, buffer, 1024, 0, (struct sockaddr *)&recv_addr, (socklen_t *)&length);
         if (ret < 0)
         {
             perror("[udp_send] recvfrom error");
@@ -44,7 +44,8 @@ int udp_send(int sockfd, struct sockaddr_in *send_addr, int len)
         char temp[1024] = {0};
         const char *ptemp = inet_ntop(AF_INET, (void *)&(recv_addr.sin_addr), temp, 1024);
         printf("we1 have recv %s from %s:%d\n\n", buffer, ptemp, recv_addr.sin_port);
-    }
+		count ++;
+   }
 
     return 0;
 }
