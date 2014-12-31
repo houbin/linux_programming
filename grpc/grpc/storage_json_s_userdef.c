@@ -419,9 +419,17 @@ int USERDEF_storage_json_storage_get_record_fragments(grpc_t *grpc, PARAM_REQ_st
 int USERDEF_storage_json_stream_get_service(grpc_t *grpc, PARAM_REQ_storage_json_stream_get_service *req, PARAM_RESP_storage_json_stream_get_service *resp)
 {
 #if 1
-	__NULL_FUNC_DBG__();
-	grpc_s_set_error(grpc, GRPC_ERR_METHOD_NOT_IMPLEMENTED, "Method not implemented");
-	return GRPC_ERR_METHOD_NOT_IMPLEMENTED;
+    if (req->sid == "abcdefg")
+    {
+        resp->sid = grpc_strdup(grpc,req->sid);
+        resp->protocol = grpc_strdup(grpc,req->protocol);
+        resp->url = grpc_strdup(grpc, req->url);
+        resp->ip = grpc_strdup(grpc, req->ip)
+        resp->port = grpc_strdup(grpc, req->port);
+        resp->channelid = req->channelid;
+    }
+
+    return 0;
 #else
 	__NULL_FUNC_DBG__();
 	int cnt = 1;

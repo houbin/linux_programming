@@ -123,7 +123,7 @@ int USERDEF_RESP_storage_json_channel_get(grpc_t *grpc);
 
 typedef struct{
 	int channels_cnt;
-	struct{
+	typedef struct {
 		char *type; //IPC/DVR/NVR
 		char *sid; //A361/N65465413
 		char *protocol; //cloudsee/rtsp/onvif
@@ -139,7 +139,8 @@ typedef struct{
 		char *passwd; //123456
 		char *streamserverip; //127.0.0.1
 		int streamserverport;
-	} *channels;
+	}channels_t;
+    channels_t *channels;
 } PARAM_REQ_storage_json_channel_add;
 
 typedef struct{
