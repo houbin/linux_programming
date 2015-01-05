@@ -423,8 +423,8 @@ int USERDEF_storage_json_stream_get_service(grpc_t *grpc, PARAM_REQ_storage_json
     {
         resp->sid = grpc_strdup(grpc,req->sid);
         resp->protocol = grpc_strdup(grpc,req->protocol);
-        resp->url = grpc_strdup(grpc, req->url);
-        resp->ip = grpc_strdup(grpc, req->ip)
+        resp->url = grpc_strdup(grpc, "");
+        resp->ip = grpc_strdup(grpc, req->ip);
         resp->port = grpc_strdup(grpc, req->port);
         resp->channelid = req->channelid;
     }

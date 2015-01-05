@@ -19,9 +19,9 @@ private:
 public:
     VMS_CLIENT(Logger *logger, struct sockaddr_in &in_addr, struct sockaddr_in &out_addr, int timeout_milliseconds);
 
-    int32_t PrepareSendRequest(grpc_t *grpc);
-    int32_t SendRequest(grpc_t *grpc);
-    int32_t PostSendRequest(grpc_t *grpc, int ret);
+    virtual int32_t PrepareSendRequest(grpc_t *grpc);
+    virtual int32_t SendRequest(grpc_t *grpc);
+    virtual int32_t PostSendRequest(grpc_t *grpc, int ret);
 };
 
 }

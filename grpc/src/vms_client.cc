@@ -13,10 +13,12 @@ VMS_CLIENT::VMS_CLIENT(Logger *logger, struct sockaddr_in &in_addr, struct socka
 int32_t VMS_CLIENT::PrepareSendRequest(grpc_t *grpc)
 {
     UserDefInfo *user_info = (UserDefInfo *)grpc->userdef;
+    
+    Log(logger_, "PrepareSendRequest start");
 
     req_.channels_cnt = 1;
-    req_.channels = (PARAM_REQ_storage_json_channel_add::channels_t*)grpc_malloc(grpc, req_.channels_cnt * sizeof(req_.channels));
-    Log(user_info->logger, "malloc size is %d", req_.channels_cnt * sizeof(req_.channels));
+    req_.channels = (channels_t*)grpc_malloc(grpc, req_.channels_cnt * sizeof(channels_t));
+    Log(user_info->logger, "malloc size is %d", req_.channels_cnt * sizeof(channels_t));
     
     for (int i = 0; i < req_.channels_cnt; i++)
     {
@@ -42,14 +44,13 @@ int32_t VMS_CLIENT::PrepareSendRequest(grpc_t *grpc)
 
 int32_t VMS_CLIENT::SendRequest(grpc_t *grpc)
 {
+    Log(logger_, "SendRequest");
     return CLIENT_storage_json_channel_add(grpc, &req_, &resp_);
 }
 
 int32_t VMS_CLIENT::PostSendRequest(grpc_t *grpc, int ret)
 {
-    req_.channels_cnt = 0;
-    req_.channels = NULL;
-
+    Log(logger_, "PostSendRequest");
     sleep(10);
     return 0;
 }

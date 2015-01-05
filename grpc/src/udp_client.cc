@@ -56,14 +56,14 @@ int32_t UDP_CLIENT::Bind()
             return -errno;
         }
     }
-
+/*
     ret = bind(fd_, (struct sockaddr *)&recv_addr_, sizeof(struct sockaddr_in));
     if (ret < 0)
     {
         Log(logger_, "bind error: %s", strerror(errno));
         return -errno;
     }
-
+*/
     return 0;
 }
 

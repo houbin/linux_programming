@@ -122,24 +122,24 @@ int USERDEF_RESP_storage_json_channel_get(grpc_t *grpc);
 //--- channel_add definition ----
 
 typedef struct{
+	char *type; //IPC/DVR/NVR
+	char *sid; //A361/N65465413
+	char *protocol; //cloudsee/rtsp/onvif
+	GBOOL bMainStream;
+	GBOOL bSubStream;
+	char *mainstream; //rtsp://127.0.0.1/live0.264
+	char *substream; //rtsp://127.0.0.1/live1.264
+	char *ip; //127.0.0.1
+	char *port; //9101
+	int channelcnt;
+	int channelid;
+	char *name; //admin
+	char *passwd; //123456
+	char *streamserverip; //127.0.0.1
+	int streamserverport;
+}channels_t;
+typedef struct{
 	int channels_cnt;
-	typedef struct {
-		char *type; //IPC/DVR/NVR
-		char *sid; //A361/N65465413
-		char *protocol; //cloudsee/rtsp/onvif
-		GBOOL bMainStream;
-		GBOOL bSubStream;
-		char *mainstream; //rtsp://127.0.0.1/live0.264
-		char *substream; //rtsp://127.0.0.1/live1.264
-		char *ip; //127.0.0.1
-		char *port; //9101
-		int channelcnt;
-		int channelid;
-		char *name; //admin
-		char *passwd; //123456
-		char *streamserverip; //127.0.0.1
-		int streamserverport;
-	}channels_t;
     channels_t *channels;
 } PARAM_REQ_storage_json_channel_add;
 

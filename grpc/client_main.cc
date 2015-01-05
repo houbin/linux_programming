@@ -43,6 +43,7 @@ int main()
     VMS_CLIENT vms_client(logger, in_addr, out_addr, 5000);
     
     discovery.Bind();
+    vms_client.Bind();
 
     discovery.Start();
     vms_client.Start();
