@@ -6,6 +6,7 @@
 #include <arpa/inet.h>
 #include <errno.h>
 #include <string.h>
+#include <time.h>
 
 int main()
 {
@@ -26,6 +27,12 @@ int main()
     server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
     server_addr.sin_port = htons(8004);
     
+    int sock_opt = 1;
+    if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, (void *)&sock_opt, sizeof(sock_opt)))
+    {
+        return -1;
+    }
+
     bind(server_fd, (struct sockaddr *)&server_addr, sizeof(struct sockaddr_in));
     listen(server_fd, 128);
 
@@ -46,8 +53,7 @@ int main()
         n = time(NULL);
 
         char write_buffer[64] = {0};
-        snprintf(write_buffer, 63, "%.24s\r\n", ctime(&n));
-        printf("buffer is %s\n", write_buffer);
+        sprintf(write_buffer, "%s", ctime(&n));
         ret = write(connect_fd, write_buffer, strlen(write_buffer));
         if (ret == -1)
         {

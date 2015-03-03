@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
 
     if (argc < 2)
     {
-        printf("args invalid\n");
+        printf("args too short\n");
         return -1;
     }
 
@@ -54,6 +54,7 @@ int main(int argc, char *argv[])
     }
 
     char str_temp[1024];
+    memset(str_temp, 0, 1024);
 
     ret = recv(fd, str_temp, sizeof(str_temp), 0);
     if (ret < 0)
@@ -62,7 +63,7 @@ int main(int argc, char *argv[])
         return -1;
     }
 
-    printf("date time is %s\n", str_temp);
+    printf("date time is %s", str_temp);
 
     return 0;
 }
