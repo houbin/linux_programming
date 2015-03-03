@@ -7,55 +7,72 @@ class Status
 {
 private:
 public:
-	int a;
-	int b;
+    int a;
+    Status()
+    {
+    
+    }
 
-	Status()
+	Status(int a)
 	{
-	    cout << "call status" << endl;
-		a = 1;
-		b = 2;
+        this->a = a;
+	    cout << "call status" << ", a is " << a << endl;
 	}
 
 	Status(int aa, int bb)
 	{
 		cout << "call status aa" << endl;
-		a = aa;
-		b = bb;
 	}
 
 	Status(const Status& s)
 	{
-	    cout << "call copy constructor" << endl;
-		a = s.a;
-		b = s.b;
+	    cout << "call copy constructor" << ", a is " << a << endl;
 	}
 
 	Status& operator=(const Status& arg)
 	{
-	    cout << "call operator=" << endl;
-		a = arg.a;
-		b = arg.b;
+        this->a = arg.a;
+	    cout << "call operator=" << ", a is " << a << endl;
 
 		return *this;
 	}
-	
+
+    int GetA()
+    {
+        return a;
+    }
 };
 
+class Derive
+{
+private:
+    Status status_;
+
+public:
+    Derive(Status &status)
+    {
+        status_ = status;
+    }
+
+    int GetA()
+    {
+        return status_.GetA();
+    }
+};
 
 Status test()
 {
-	Status s;
-	s.a = 99;
-	s.b = 100;
+	Status s(10101010);
     return s;
 }
 
 int main()
 {
-    Status b;
-	b = test();
+    Status b(5);
+    b = test();
 
-	cout << "b.a is " << b.a << ", b.b is " << b.b << endl;
+
+    Derive derive(b);
+    cout << "a of b is " << derive.GetA() << endl;
     return 0;
 }

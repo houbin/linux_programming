@@ -1,0 +1,58 @@
+#ifndef UTIL_BITMAPPER_H
+#define UTIL_BITMAPPER_H
+
+namespace util
+{
+
+class bitmapper {
+  char *data_;
+  int len_;
+
+ public:
+  bitmapper() : data_(0), len_(0) { }
+  bitmapper(int len) : len_(len)
+  {
+    data_ = malloc(len_);
+  }
+
+  ~bitmapper()
+  {
+    free(data_);
+    data_ = NULL;
+  }
+
+  int bytes() const { return len_; }
+  int bits() const { return len_ * 8; }
+
+  int get_free()
+  {
+    int i = 0;
+    for (i = 0; i < len_; i++)
+    {
+        int *temp = (int *)data_;
+        if (temp[i] == 0xFFFFFFFF)
+        {
+            continue;
+        }
+
+        
+    }
+  }
+
+  bool operator[](int b) const {
+    return get(b);
+  }
+  bool get(int b) const {
+    return data_[b >> 3] & (1 << (b&7));
+  }
+  void set(int b) {
+    data_[b >> 3] |= 1 << (b&7);
+  }
+  void clear(int b) {
+    data_[b >> 3] &= ~(1 << (b&7));
+  }
+};
+
+}
+
+#endif
