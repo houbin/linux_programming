@@ -66,6 +66,13 @@ Status test()
     return s;
 }
 
+int test_2(Status s)
+{
+    printf("test_2: a of status s is %d\n", s.a);
+
+    return 0;
+}
+
 int main()
 {
     Status b(5);
@@ -74,5 +81,9 @@ int main()
 
     Derive derive(b);
     cout << "a of b is " << derive.GetA() << endl;
+
+    cout << "test function parameter" << endl;
+
+    test_2(b);
     return 0;
 }

@@ -2,7 +2,7 @@
 
 void fun2()
 {
-    assert("abc");
+    assert("abc" == 0);
 }
 
 void fun1()

@@ -56,14 +56,20 @@ int main(int argc, char *argv[])
     char str_temp[1024];
     memset(str_temp, 0, 1024);
 
-    ret = recv(fd, str_temp, sizeof(str_temp), 0);
-    if (ret < 0)
+    int n = 0;
+    while((n = read(fd, str_temp, 1024)) > 0)
     {
-        printf("recv error, errno is %s\n", strerror(errno));
-        return -1;
+        str_temp[n] = 0;
+        if (fputs(str_temp, stdout) == EOF)
+        {
+            perror("fputs error");
+        }
     }
 
-    printf("date time is %s", str_temp);
+    if (n < 0)
+    {
+        perror("read error");
+    }
 
     return 0;
 }
