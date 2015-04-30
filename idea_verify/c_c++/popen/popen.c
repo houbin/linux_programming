@@ -7,7 +7,7 @@ int main()
     char buffer[1024] = {0};
     char result_buffer[2048] = {0};
 
-    snprintf(buffer, 1024, "/jovision/shell/disk_format/format_one_disk.sh sdb");
+    snprintf(buffer, 1024, "./test.sh &");
 
     fp = popen(buffer, "r");
     if (fp == NULL)
@@ -16,10 +16,12 @@ int main()
         return -1;
     }
 
+    printf("fgets start\n");
     while(fgets(result_buffer, sizeof(result_buffer), fp) != NULL)
     {
         printf("result is %s\n", result_buffer);
     }
+    printf("fgets end\n");
     
     int rc = pclose(fp);
     if (rc == -1)

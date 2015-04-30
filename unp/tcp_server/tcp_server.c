@@ -46,6 +46,8 @@ int main()
             return -1;
         }
 
+        printf("connect_fd is %d\n", connect_fd);
+
         char buffer[64] = {0};
         ret = read(connect_fd, buffer, 64);
         printf("read msg is %s, ret is %d\n", buffer, ret);
@@ -62,6 +64,7 @@ int main()
 
         close(connect_fd);
     }
+    close(server_fd);
 
     return 0;
 }

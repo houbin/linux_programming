@@ -1,8 +1,5 @@
-#include <stdio.h>
-#include <errno.h>
-#include <sys/types.h>
+#include <apue.h>
 #include <dirent.h>
-#include <string.h>
 
 int main(int argc, char *argv[])
 {
