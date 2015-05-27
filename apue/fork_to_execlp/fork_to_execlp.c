@@ -1,13 +1,29 @@
 #include "../apue.h"
-#
+#include <signal.h>
+
+void signal_handle(int sig_num)
+{
+    printf("signal sig number %d\n", sig_num);
+
+    return ;
+}
 
 int main()
 {
     pid_t pid;
     char buffer[128] = {0};
     int status = 0;
+    struct sigaction new;
+    memset(&new, 0, sizeof(struct sigaction));
 
-    printf("%% ");
+    new.sa_handler = signal_handle;
+
+    if (sigaction(SIGINT, &new, NULL) != 0)
+    {
+        printf("sigaction error\n");
+        return -1;
+    }
+
     while(fgets(buffer, 127, stdin) != NULL)
     {
         int length = strlen(buffer);

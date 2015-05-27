@@ -2,7 +2,7 @@
 
 int main()
 {
-    printf("hello world from process id %d\n", getpid());
+    printf("hello world from process id %d, uid %d, gid %d\n", getpid(), getuid(), getgid());
 
     return 0;
 }
