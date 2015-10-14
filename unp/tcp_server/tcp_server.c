@@ -7,6 +7,8 @@
 #include <errno.h>
 #include <string.h>
 #include <time.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
 
 int main()
 {
@@ -52,7 +54,30 @@ int main()
         ret = read(connect_fd, buffer, 64);
         printf("read msg is %s, ret is %d\n", buffer, ret);
 
+        struct sockaddr_in addr;
+        socklen_t len = sizeof(struct sockaddr);
+        ret = getsockname(connect_fd, (struct sockaddr*)&addr, &len);
+        if (ret != 0)
+        {
+            printf("ret is %d\n", ret);
+            perror("get socket name error");
+            return ret;
+        }
+
+        printf("getsockname: ip is %s, port is %d\n", inet_ntoa(addr.sin_addr), ntohs(addr.sin_port));
+
+        struct sockaddr_in peer_addr;
+        ret = getpeername(connect_fd, (struct sockaddr*)&peer_addr, &len);
+        if (ret != 0)
+        {
+            printf("ret is %d\n", ret);
+            perror("get socket name error");
+            return ret;
+        }
+        printf("getpeername: ip is %s, port is %d\n", inet_ntoa(peer_addr.sin_addr), ntohs(peer_addr.sin_port));
+
         n = time(NULL);
+        sleep(2);
 
         char write_buffer[64] = {0};
         sprintf(write_buffer, "%s", ctime(&n));
@@ -60,6 +85,10 @@ int main()
         if (ret == -1)
         {
             perror("write error");
+        }
+        else
+        {
+            printf("write msg len %d\n\n\n",ret );
         }
 
         close(connect_fd);

@@ -35,11 +35,13 @@ int main(int argc, char *argv[])
             printf("inet_pton error\n");
             return -1;
         }
+
         
         memset(&server_addr, 0, sizeof(struct sockaddr_in));
         server_addr.sin_family = AF_INET;
         server_addr.sin_addr.s_addr = temp.s_addr;
-        server_addr.sin_port = htons(8004);
+        server_addr.sin_port = htons(15030);
+
         ret = connect(fd, (struct sockaddr *)&server_addr, sizeof(struct sockaddr_in));
         if (ret < 0)
         {
@@ -56,6 +58,8 @@ int main(int argc, char *argv[])
             return -1;
         }
 
+        close(fd);
+
         char str_temp[1024];
         memset(str_temp, 0, 1024);
 
@@ -68,12 +72,12 @@ int main(int argc, char *argv[])
                 perror("fputs error");
             }
         }
-
         if (n < 0)
         {
             perror("read error");
         }
 
+        close(fd);
         close(fd);
         sleep(2);
     }

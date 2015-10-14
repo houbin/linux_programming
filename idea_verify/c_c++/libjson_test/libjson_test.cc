@@ -7,6 +7,7 @@
 #include <libjson/libjson.h>
 #include <libjson/JSONOptions.h>
 #include "libjson/_internal/Source/JSONNode.h"
+#include <stdio.h>
 
 using namespace std;
 
@@ -41,6 +42,69 @@ struct LoadItem
 {
     struct sockaddr_in load_client_addr;
 };
+
+void DecParamNode(JSONNode param_node)
+{
+    cout << "before param_node is " << param_node.write() << endl;
+//    param_node.preparse();
+    string temp_str = param_node.write();
+    JSONNode temp_node = libjson::parse(temp_str);
+    temp_node.preparse();
+
+    JSONNode data_node = temp_node["param"].as_node();
+    cout << "data_node is " << data_node.write() << endl;
+    JSONNode data_node_2(JSON_NODE);
+    int count = data_node.size();
+    int i = 0;
+    for(; i < count; i++)
+    {
+        JSONNode node = data_node[i];
+        data_node_2.push_back(node);
+    }
+
+    cout << data_node_2.write() << endl;
+    data_node_2.push_back(JSONNode("sendcnt", 0));
+
+    cout << data_node_2.write() << endl;
+
+{
+    int count = data_node_2.size();
+    cout << "count is " << count << endl;
+    JSONNode aaa;
+    aaa.set_name("aaa");
+    int i = 0;
+    for (; i < count; i++)
+    {
+        aaa.push_back(data_node_2[i]);
+    }
+    JSONNode aaa_temp;
+    aaa_temp.push_back(aaa);
+    aaa_temp.push_back(JSONNode("bbb", "bbb"));
+    aaa_temp.push_back(JSONNode("ccc", "ccc"));
+    JSONNode bbb;
+    bbb.set_name("ddd");
+    bbb.push_back(JSONNode("DDD", "DDD"));
+    aaa_temp.push_back(bbb);
+    cout << "aaa is " << aaa_temp.write() << endl;
+
+    cout << "decode " << endl;
+
+    aaa_temp.pop_back("ccc");
+
+    //aaa_temp.push_back(JSONNode("hhhh", "bbb"));
+    aaa_temp.pop_back("aaa");
+    aaa_temp.pop_back("bbb");
+    aaa_temp.pop_back("ddd");
+    if (aaa_temp.empty())
+    {
+        cout << "aaa_temp is empty" << endl;
+    }
+
+    cout << "aaa_temp is " << aaa_temp.write() << endl;
+}
+
+    return;
+}
 
 int JsonBuildAddressListResp(vector<LoadItem> &sorted_short_conn_vec, vector<LoadItem> &sorted_long_conn_vec, JSONNode &out_)
 {
@@ -130,11 +194,59 @@ int main()
     }
 
     JsonBuildAddressListResp(short_conn_vec, long_conn_vec, out);
+    if (out.empty())
+    {
+        printf("out_node is empty\n");
+    }
+    else
+    {
+        printf("out_node is not empty\n");
+    }
+
+    JSONNode param_node;
+    param_node.set_name("param_name");
+    JSONNode name_node;
+    name_node.push_back(JSONNode("name", "houbin"));
+
+    param_node.push_back(name_node);
+    //param_node.push_back(JSONNode("param_node", out.write()));
+    //
+    
 
     string test = out.write();
     cout << out.write() << endl;
 
+
+    cout << endl;
+    cout << "param_node is " << param_node.write() << endl;
+    cout << endl;
+
     Parse(test);
+
+    JSONNode empty_node;
+    if (empty_node.empty())
+    {
+        printf("empty_node is empty\n");
+    }
+    else
+    {
+        printf("empty_node is not empty\n");
+    }
+
+
+    cout << "another test " << endl;
+    JSONNode test_node;
+    test_node.set_name("param");
+    test_node.push_back(JSONNode("name", "houbin"));
+    test_node.push_back(JSONNode("age", "30"));
+
+    //DecParamNode(test_node);
+
+    JSONNode test_node_2;
+    test_node_2.push_back(test_node);
+
+    DecParamNode(test_node_2);
+
 
     return 0;
 }

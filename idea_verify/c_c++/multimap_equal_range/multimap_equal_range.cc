@@ -14,7 +14,7 @@ int main ()
   mymm.insert(std::pair<char,int>('d',60));
 
   std::cout << "mymm contains:\n";
-  for (char ch='e'; ch<='f'; ch++)
+  for (char ch='b'; ch<='d'; ch++)
   {
     std::pair <std::multimap<char,int>::iterator, std::multimap<char,int>::iterator> ret;
     ret = mymm.equal_range(ch);

@@ -1,3 +1,6 @@
 a.out
 *.[ao]
 *.so
+
+tcpclient
+tcpserver
