@@ -5,7 +5,10 @@
 #include <arpa/inet.h>
 #include <errno.h>
 #include <string.h>
+#include <string>
 //#include "unp.h"
+
+using namespace std;
 
 int main(int argc, char *argv[])
 {
@@ -40,7 +43,7 @@ int main(int argc, char *argv[])
         memset(&server_addr, 0, sizeof(struct sockaddr_in));
         server_addr.sin_family = AF_INET;
         server_addr.sin_addr.s_addr = temp.s_addr;
-        server_addr.sin_port = htons(15030);
+        server_addr.sin_port = htons(8004);
 
         ret = connect(fd, (struct sockaddr *)&server_addr, sizeof(struct sockaddr_in));
         if (ret < 0)
@@ -49,9 +52,13 @@ int main(int argc, char *argv[])
             return -1;
         }
 
-        char buffer[] = "get date time";
+        char buffer[32] = {0};
+        buffer[10] = 64;
+        buffer[20] = 100;
+        
+        string msg(buffer, 32);
 
-        ret = send(fd, buffer, sizeof(buffer), 0);
+        ret = send(fd, msg.c_str(), msg.size(), 0);
         if (ret < 0)
         {
             printf("send error, errno is %s\n", strerror(errno));
@@ -60,25 +67,6 @@ int main(int argc, char *argv[])
 
         close(fd);
 
-        char str_temp[1024];
-        memset(str_temp, 0, 1024);
-
-        int n = 0;
-        while((n = read(fd, str_temp, 1024)) > 0)
-        {
-            str_temp[n] = 0;
-            if (fputs(str_temp, stdout) == EOF)
-            {
-                perror("fputs error");
-            }
-        }
-        if (n < 0)
-        {
-            perror("read error");
-        }
-
-        close(fd);
-        close(fd);
         sleep(2);
     }
 

@@ -4,3 +4,5 @@ a.out
 
 tcpclient
 tcpserver
+
+libevent_echosrv_buffered

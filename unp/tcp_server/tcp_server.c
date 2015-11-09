@@ -52,7 +52,13 @@ int main()
 
         char buffer[64] = {0};
         ret = read(connect_fd, buffer, 64);
-        printf("read msg is %s, ret is %d\n", buffer, ret);
+
+        int i = 0;
+        for (; i < ret; i++)
+        {
+            printf("%02x ", buffer[i]);
+        }
+        printf("\n");
 
         struct sockaddr_in addr;
         socklen_t len = sizeof(struct sockaddr);

@@ -1,35 +1,44 @@
-#include <stdlib.h>
-#include <unistd.h>
-#include <string.h>
+#include <iostream>
 #include <event2/event.h>
-#include <event2/event_struct.h>
+#include <event.h>
+#include <event2/event.h>
 #include <event2/bufferevent.h>
 #include <event2/buffer.h>
-#include <event2/queue.h>
 
-struct event_base *base = NULL;
-struct event *ev = NULL;
-struct timeval tv;
+int count = 0;
 
-void timer_cb(evutil_socket_t fd, short event, void *arg)
+struct Args
 {
-    printf("timer timeout, fd is %d, event is %d\n", fd, event);
+    struct event *ev;
+    struct timeval tv;
+};
 
-    event_add(ev, &tv);
+void timeout_cb(int fd, short event, void *params)
+{
+    Args *arg = (Args*)params;
+    struct event *ev = arg->ev;
+    struct timeval tv = arg->tv;
 
-    return;
+    printf("timeout\n");
+    evtimer_del(ev);
 }
 
 int main()
 {
-    base = event_base_new();
-    ev = evtimer_new(base, &timer_cb, base);
+    struct event_base *base = event_base_new();
+    struct event *timeout = NULL;
+    struct timeval tv = {2, 0};
 
-    tv.tv_sec = 2;
-    tv.tv_usec = 0;
-    event_add(ev, &tv);
-
+    Args *arg = new Args();
+    timeout = evtimer_new(base, timeout_cb, arg);
+    arg->ev = timeout;
+    arg->tv = tv;
+    evtimer_add(timeout, &tv);
     event_base_dispatch(base);
+
+    sleep(100);
 
     return 0;
 }
+
+
