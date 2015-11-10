@@ -6,3 +6,6 @@ tcpclient
 tcpserver
 
 libevent_echosrv_buffered
+core.*
+select_client
+select_server
