@@ -69,7 +69,7 @@ int main(int argc, char *argv[])
         printf("recv %s\n", recv_buffer);
 
         close(fd);
-        sleep(2);
+        sleep(10);
     }
 
     return 0;

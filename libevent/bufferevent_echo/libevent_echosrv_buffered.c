@@ -42,6 +42,7 @@
 #include <unistd.h>
 #include <errno.h>
 #include <err.h>
+#include <stdint.h>
 
 /* Libevent. */
 #include <event.h>
@@ -56,6 +57,7 @@
 struct client {
 	/* The clients socket. */
 	int fd;
+    int need_free;
 
 	/* The bufferedevent for this client. */
 	struct bufferevent *buf_ev;
@@ -97,7 +99,10 @@ buffered_on_read(struct bufferevent *bev, void *arg)
     struct evbuffer *out_buffer = evbuffer_new();
     evbuffer_add(out_buffer, data, readed);
 
-	bufferevent_write_buffer(bev, out_buffer);
+    char buffer[32] = "hello, world";
+	bufferevent_write(bev, buffer, 32);
+    struct client *c = (struct client *)arg;
+    c->need_free = 1;
 }
 
 /**
@@ -107,6 +112,13 @@ buffered_on_read(struct bufferevent *bev, void *arg)
 void
 buffered_on_write(struct bufferevent *bev, void *arg)
 {
+    printf("enter buffer_on_write\n");
+    struct client *c = (struct client*)arg;
+    if (c->need_free)
+    {
+        printf("client need free is true\n");
+        bufferevent_free(bev);
+    }
 }
 
 /**
@@ -158,7 +170,8 @@ on_accept(int fd, short ev, void *arg)
 	if (client == NULL)
 		err(1, "malloc failed");
 	client->fd = client_fd;
-	
+    client->need_free = 0;
+
 	/* Create the buffered event.
 	 *
 	 * The first argument is the file descriptor that will trigger
@@ -182,6 +195,7 @@ on_accept(int fd, short ev, void *arg)
 	 * that will be passed to the callbacks.  We store the client
 	 * object here.
 	 */
+    client->buf_ev = bufferevent_socket_new()
 	client->buf_ev = bufferevent_new(client_fd, buffered_on_read,
 	    buffered_on_write, buffered_on_error, client);
 

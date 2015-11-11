@@ -11,43 +11,21 @@
 #include <stdio.h>
 #include <unistd.h>
 
-#define server_port 5555
+#define server_port 9995
 
 using namespace std;
 
 int fd = -1;
-bool connected = false;
-
-void *send_func(void *arg)
-{
-    char buffer[32] = "hello from select client";
-
-    while (true)
-    {
-        if (connected)
-        {
-            int ret = send(fd, buffer, strlen(buffer), MSG_NOSIGNAL);
-            if (ret != strlen(buffer))
-            {
-                perror("send error");
-                printf("fd %d\n", fd);
-            }
-        }
-
-        sleep(2);
-    }
-
-    return 0;
-}
 
 int main()
 {
     // create a thread
     //
-    pthread_t t;
-    pthread_create(&t, NULL, send_func, NULL);
+ //   pthread_t t;
+//    pthread_create(&t, NULL, send_func, NULL);
 
     int ret = 0;
+    bool connected = false;
     struct sockaddr_in server_addr;
     
     memset(&server_addr, 0, sizeof(server_addr));
@@ -59,21 +37,21 @@ int main()
 
     struct timeval tv = {0, 0};
 
+    fd = socket(AF_INET, SOCK_STREAM, 0);
+    if (fd < 0)
+    {
+        perror("create socket error");
+        return -1;
+    }
+
     while (true)
     {
         while (!connected)
         {
-            fd = socket(AF_INET, SOCK_STREAM, 0);
-            if (fd < 0)
-            {
-                perror("create socket error");
-                return -1;
-            }
-
             ret = connect(fd, (struct sockaddr*)&server_addr, len);
             if (ret < 0)
             {
-                cout << "connect error, sleep 5s" << endl;
+                perror("connect error");
                 connected = false;
                 sleep(5);
                 continue;

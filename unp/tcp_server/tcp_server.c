@@ -50,53 +50,58 @@ int main()
 
         printf("connect_fd is %d\n", connect_fd);
 
-        char buffer[64] = {0};
-        ret = read(connect_fd, buffer, 64);
-
-        int i = 0;
-        for (; i < ret; i++)
+        while(true)
         {
-            printf("%02x ", buffer[i]);
+            char buffer[64] = {0};
+            ret = read(connect_fd, buffer, 64);
+
+            /*
+            int i = 0;
+            for (; i < ret; i++)
+            {
+                printf("%02x ", buffer[i]);
+            }
+            printf("\n");
+            */
+            printf("recv msg %s\n", buffer);
+
+            struct sockaddr_in addr;
+            socklen_t len = sizeof(struct sockaddr);
+            ret = getsockname(connect_fd, (struct sockaddr*)&addr, &len);
+            if (ret != 0)
+            {
+                printf("ret is %d\n", ret);
+                perror("get socket name error");
+                return ret;
+            }
+
+            printf("getsockname: ip is %s, port is %d\n", inet_ntoa(addr.sin_addr), ntohs(addr.sin_port));
+
+            struct sockaddr_in peer_addr;
+            ret = getpeername(connect_fd, (struct sockaddr*)&peer_addr, &len);
+            if (ret != 0)
+            {
+                printf("ret is %d\n", ret);
+                perror("get socket name error");
+                return ret;
+            }
+            printf("getpeername: ip is %s, port is %d\n", inet_ntoa(peer_addr.sin_addr), ntohs(peer_addr.sin_port));
+
+            n = time(NULL);
+            sleep(2);
+
+            char write_buffer[64] = {0};
+            sprintf(write_buffer, "%s", ctime(&n));
+            ret = write(connect_fd, write_buffer, strlen(write_buffer));
+            if (ret == -1)
+            {
+                perror("write error");
+            }
+            else
+            {
+                printf("write msg len %d\n\n\n",ret );
+            }
         }
-        printf("\n");
-
-        struct sockaddr_in addr;
-        socklen_t len = sizeof(struct sockaddr);
-        ret = getsockname(connect_fd, (struct sockaddr*)&addr, &len);
-        if (ret != 0)
-        {
-            printf("ret is %d\n", ret);
-            perror("get socket name error");
-            return ret;
-        }
-
-        printf("getsockname: ip is %s, port is %d\n", inet_ntoa(addr.sin_addr), ntohs(addr.sin_port));
-
-        struct sockaddr_in peer_addr;
-        ret = getpeername(connect_fd, (struct sockaddr*)&peer_addr, &len);
-        if (ret != 0)
-        {
-            printf("ret is %d\n", ret);
-            perror("get socket name error");
-            return ret;
-        }
-        printf("getpeername: ip is %s, port is %d\n", inet_ntoa(peer_addr.sin_addr), ntohs(peer_addr.sin_port));
-
-        n = time(NULL);
-        sleep(2);
-
-        char write_buffer[64] = {0};
-        sprintf(write_buffer, "%s", ctime(&n));
-        ret = write(connect_fd, write_buffer, strlen(write_buffer));
-        if (ret == -1)
-        {
-            perror("write error");
-        }
-        else
-        {
-            printf("write msg len %d\n\n\n",ret );
-        }
-
         close(connect_fd);
     }
     close(server_fd);
