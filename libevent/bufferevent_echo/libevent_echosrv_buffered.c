@@ -58,6 +58,7 @@ struct client {
 	/* The clients socket. */
 	int fd;
     int need_free;
+    int msg_count;
 
 	/* The bufferedevent for this client. */
 	struct bufferevent *buf_ev;
@@ -100,9 +101,11 @@ buffered_on_read(struct bufferevent *bev, void *arg)
     evbuffer_add(out_buffer, data, readed);
 
     char buffer[32] = "hello, world";
-	bufferevent_write(bev, buffer, 32);
+	//bufferevent_write(bev, buffer, 32);
     struct client *c = (struct client *)arg;
-    c->need_free = 1;
+    //if (c->msg_count++ == 2)
+    bufferevent_flush(bev, EV_WRITE, BEV_FINISHED);
+        c->need_free = 1;
 }
 
 /**
@@ -114,10 +117,12 @@ buffered_on_write(struct bufferevent *bev, void *arg)
 {
     printf("enter buffer_on_write\n");
     struct client *c = (struct client*)arg;
-    if (c->need_free)
+    if (c->need_free && evbuffer_get_length(bufferevent_get_output(bev)) == 0)
     {
         printf("client need free is true\n");
         bufferevent_free(bev);
+        free(c);
+        c = NULL;
     }
 }
 
@@ -171,6 +176,7 @@ on_accept(int fd, short ev, void *arg)
 		err(1, "malloc failed");
 	client->fd = client_fd;
     client->need_free = 0;
+    client->msg_count = 0;
 
 	/* Create the buffered event.
 	 *
@@ -195,13 +201,13 @@ on_accept(int fd, short ev, void *arg)
 	 * that will be passed to the callbacks.  We store the client
 	 * object here.
 	 */
-    client->buf_ev = bufferevent_socket_new()
-	client->buf_ev = bufferevent_new(client_fd, buffered_on_read,
-	    buffered_on_write, buffered_on_error, client);
+    int flags = BEV_OPT_CLOSE_ON_FREE;
+    client->buf_ev = bufferevent_socket_new(NULL, client_fd, flags);
 
 	/* We have to enable it before our callbacks will be
 	 * called. */
-	bufferevent_enable(client->buf_ev, EV_READ);
+    bufferevent_setcb(client->buf_ev, buffered_on_read, buffered_on_write, buffered_on_error, client);
+	bufferevent_enable(client->buf_ev, EV_READ|EV_WRITE|EV_PERSIST);
 
 	printf("Accepted connection from %s\n", 
 	    inet_ntoa(client_addr.sin_addr));

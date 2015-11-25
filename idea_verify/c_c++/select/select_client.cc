@@ -103,7 +103,6 @@ int main()
                 {
                     string msg(buffer);
                     cout << "aaaaaa select recv msg " << msg << endl;
-                    sleep(5);
                 }
                 else if (ret == 0)
                 {

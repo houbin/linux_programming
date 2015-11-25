@@ -39,7 +39,7 @@ public:
             }
             else
             {
-                printf("NotifyObserver erase\n");
+                printf("NotifyObserver erased\n");
                 iter = observers_.erase(iter);
             }
         }
