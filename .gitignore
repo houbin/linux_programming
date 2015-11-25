@@ -5,12 +5,9 @@ a.out
 tcpclient
 tcpserver
 
-<<<<<<< HEAD
 libevent_echosrv_buffered
 core.*
 select_client
 select_server
-=======
 person_test
 myfile
->>>>>>> ba21f3d680ff8bbfa9411d75452e2e1e739fd342
